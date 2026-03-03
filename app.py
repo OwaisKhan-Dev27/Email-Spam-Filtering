@@ -1,13 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, request, render_template
 import pickle
 
-app = Flask(_name_)
+app = Flask(__name__)
 
-with open("spam_model.pkl", "rb") as f:
-    model = pickle.load(f)
-
-with open("tfidf_vectorizer.pkl", "rb") as f:
-    vectorizer = pickle.load(f)
+# Load model and vectorizer (ONLY LOAD, NOT SAVE)
+model = pickle.load(open("model.pkl", "rb"))
+vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 
 @app.route("/")
 def home():
@@ -16,16 +14,12 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     message = request.form["message"]
-    data = [message]
-    data_features = vectorizer.transform(data)
-    prediction = model.predict(data_features)
+    data = vectorizer.transform([message])
+    prediction = model.predict(data)[0]
 
-    if prediction[0] == 1:
-        result = "Spam"
-    else:
-        result = "Ham"
+    result = "SPAM" if prediction == 1 else "HAM"
 
     return render_template("index.html", prediction_text=result)
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(debug=True)

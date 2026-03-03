@@ -1,6 +1,5 @@
 import pandas as pd
-df = pd.read_csv("dataset/spam.csv",
-encoding='latin-1')
+df = pd.read_csv("dataset/spam.csv",encoding='latin-1')
 df = df[['v1','v2']]
 df.columns = ['label','message']
 df['label'] = df['label'].map({'ham':0,'spam':1})
@@ -23,7 +22,7 @@ Y_pred = model.predict(X_test_tfidf)
 print("Accuracy:", accuracy_score(Y_test, Y_pred))
 print("Confusion Matrix:\n",
 confusion_matrix(Y_test, Y_pred))
-input_mail = input("Enter a message tocheck spam or ham:")
+input_mail = input("Enter a message to check spam or ham:")
 input_data = [input_mail]
 input_data_features = vectorizer.transform(input_data)
 prediction = model.predict(input_data_features)
